@@ -8,6 +8,8 @@ import (
 	"lottery/conf"
 	"sync"
 )
+
+//互斥锁
 var dbLock sync.Mutex
 var masterInstance *xorm.Engine
 
