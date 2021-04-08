@@ -17,6 +17,7 @@ import (
 )
 
 type IndexController struct {
+	//web应用的上下文环境
 	Ctx iris.Context
 	ServiceUser services.UserService
 	ServiceGift services.GiftService

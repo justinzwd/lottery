@@ -5,7 +5,8 @@
 package utils
 
 import (
-	"fmt"
+		"fmt"
+
 	"lottery/datasource"
 	)
 

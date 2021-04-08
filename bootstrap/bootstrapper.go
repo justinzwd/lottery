@@ -19,7 +19,7 @@ type Bootstrapper struct {
 	*iris.Application
 	AppName string
 	AppOwner string
-	AppSpawDate time.Time
+	AppSpawnDate time.Time
 
 	Sessions *sessions.Sessions
 }
@@ -29,7 +29,7 @@ func New(appName, appOwner string, cfgs ...Configurator) *Bootstrapper {
 		Application: iris.New(),
 		AppName:     appName,
 		AppOwner:    appOwner,
-		AppSpawDate: time.Now(),
+		AppSpawnDate: time.Now(),
 	}
 
 	for _, cfg := range cfgs {
@@ -39,12 +39,14 @@ func New(appName, appOwner string, cfgs ...Configurator) *Bootstrapper {
 	return b
 }
 
-// SetupViews loads the templates.
+// 加载模版
 func (b *Bootstrapper) SetupViews(viewsDir string) {
 	htmlEngine := iris.HTML(viewsDir, ".html").Layout("shared/layout.html")
 	// 每次重新加载模版（线上关闭它）
+	//开发模式改为true
 	htmlEngine.Reload(true)
 	// 给模版内置各种定制的方法
+	//将短的Unix时间转换为字符串
 	htmlEngine.AddFunc("FromUnixtimeShort", func(t int) string {
 		dt := time.Unix(int64(t), int64(0))
 		return dt.Format(conf.SysTimeformShort)
@@ -69,7 +71,9 @@ func (b *Bootstrapper) SetupViews(viewsDir string) {
 
 // SetupErrorHandlers prepares the http error handlers
 // `(context.StatusCodeNotSuccessful`,  which defaults to < 200 || >= 400 but you can change it).
+//异常处理
 func (b *Bootstrapper) SetupErrorHandlers() {
+	//iris.Context  web应用的上下文环境
 	b.OnAnyErrorCode(func(ctx iris.Context) {
 		err := iris.Map{
 			"app":     b.AppName,
@@ -77,11 +81,13 @@ func (b *Bootstrapper) SetupErrorHandlers() {
 			"message": ctx.Values().GetString("message"),
 		}
 
+		//如果URL参数里面包含json, 那么就返回 json格式的结果
 		if jsonOutput := ctx.URLParamExists("json"); jsonOutput {
 			ctx.JSON(err)
 			return
 		}
 
+		//否则的话，我们就用模版来输出
 		ctx.ViewData("Err", err)
 		ctx.ViewData("Title", "Error")
 		ctx.View("shared/error.html")
@@ -116,13 +122,14 @@ func (b *Bootstrapper) setupCron() {
 const (
 	// StaticAssets is the root directory for public assets like images, css, js.
 	StaticAssets = "./public/"
-	// Favicon is the relative 9to the "StaticAssets") favicon path for our app.
+	// Favicon is the relative to the "StaticAssets") favicon path for our app.
 	Favicon = "favicon.ico"
 )
 
 // Bootstrap prepares our application.
 //
 // Returns itself.
+//初始化
 func (b *Bootstrapper) Bootstrap() *Bootstrapper {
 	b.SetupViews("./views")
 	b.SetupSessions(24*time.Hour,
@@ -147,5 +154,6 @@ func (b *Bootstrapper) Bootstrap() *Bootstrapper {
 
 // Listen starts the http server with the specified "addr".
 func (b *Bootstrapper) Listen(addr string, cfgs ...iris.Configurator) {
+	//对特定的addr 监听起来，形成一个服务
 	b.Run(iris.Addr(addr), cfgs...)
 }
