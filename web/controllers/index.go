@@ -28,6 +28,7 @@ type IndexController struct {
 }
 
 // http://localhost:8080/
+//默认的首页
 func (c *IndexController) Get() string {
 	c.Ctx.Header("Content-Type", "text/html")
 	return "welcome to Go抽奖系统，<a href='/public/index.html'>开始抽奖</a>"
@@ -38,6 +39,7 @@ func (c *IndexController) GetGifts() map[string]interface{} {
 	rs := make(map[string]interface{})
 	rs["code"] = 0
 	rs["msg"] = ""
+	//取出所有可以用的奖品
 	datalist := c.ServiceGift.GetAll(true)
 	list := make([]models.LtGift, 0)
 	for _, data := range datalist {
@@ -51,6 +53,8 @@ func (c *IndexController) GetGifts() map[string]interface{} {
 }
 
 // http://localhost:8080/newprize
+//最新的获奖列表
+//比如"刚才xxx分钟 xxx 女士抽中了xxxx 大奖"
 func (c *IndexController) GetNewprize() map[string]interface{} {
 	rs := make(map[string]interface{})
 	rs["code"] = 0
