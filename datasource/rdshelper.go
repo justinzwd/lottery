@@ -23,6 +23,7 @@ func (rds *RedisConn) Do(commandName string,args ...interface{}) (reply interfac
 	conn := rds.pool.Get()
 	defer conn.Close()
 
+	//由于有debug功能，因此我们需要有时间的检查
 	t1 := time.Now().UnixNano()
 	reply,err = conn.Do(commandName,args...)
 	if err != nil {
@@ -40,7 +41,7 @@ func (rds *RedisConn) Do(commandName string,args ...interface{}) (reply interfac
 	return reply, err
 }
 
-//设置是否打印操作日志
+//设置是否要调试，是否打印操作日志
 func (rds *RedisConn) ShowDebug(b bool) {
 	rds.showDebug = b
 }
@@ -60,10 +61,11 @@ func InstanceCache() *RedisConn {
 	return NewCache()
 }
 
-//重新实例化
+//获得实例化
 func NewCache() *RedisConn {
 	pool := redis.Pool{
 		Dial: func() (conn redis.Conn, e error) {
+			//tcp连接，将参数传进去
 			conn, e = redis.Dial("tcp",fmt.Sprintf("%s:%d",conf.RdsCache.Host, conf.RdsCache.Port))
 			if e != nil {
 				log.Fatal("redhelper.NewCache Dial error ", e)
