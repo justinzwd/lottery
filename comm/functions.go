@@ -133,6 +133,7 @@ func Stripslashes(str string) string {
 }
 
 // 将字符串的IP转化为数字
+//数据库操作中会节省一些空间，因为存储int会比存储string字符串占内存更小
 func Ip4toInt(ip string) int64 {
 	bits := strings.Split(ip, ".")
 	if len(bits) == 4 {
@@ -226,6 +227,8 @@ func GetString(str interface{}, d string) string {
 }
 
 // 从map中得到指定的key
+//一般情况下从map中取值，会得到value和ok表示的是否成功取到值
+//这个函数可以直接返回value，如果没有查询到数据，则返回默认值
 func GetInt64FromMap(dm map[string]interface{}, key string, dft int64) int64 {
 	data, ok := dm[key]
 	if !ok {
