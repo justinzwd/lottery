@@ -11,10 +11,11 @@ import (
 	"time"
 )
 
+//配置器，函数类型
 type Configurator func(bootstrapper *Bootstrapper)
 
 type Bootstrapper struct {
-	//Bootstrapper继承*iris.Application
+	//Bootstrapper 继承 *iris.Application
 	*iris.Application
 	AppName string
 	AppOwner string
