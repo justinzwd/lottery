@@ -33,7 +33,8 @@ func (api *LuckyApi) checkUserday(uid int, num int64) bool {
 			}
 		}
 	} else {
-		// 创建今天的用户参与记录
+		// 如果不存在用户参与记录
+		// 则创建今天的用户参与记录
 		y, m, d := time.Now().Date()
 		strDay := fmt.Sprintf("%d%02d%02d", y, m, d)
 		day, _ := strconv.Atoi(strDay)
