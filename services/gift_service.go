@@ -130,6 +130,7 @@ func (s *giftService) GetAllUse(useCache bool) []models.ObjGiftPrize {
 	if list != nil {
 		gifts := make([]models.ObjGiftPrize, 0)
 		for _, gift := range list {
+			//PrizeCode是中奖概率
 			codes := strings.Split(gift.PrizeCode, "-")
 			if len(codes) == 2 {
 				// 设置了获奖编码范围 a-b 才可以进行抽奖
