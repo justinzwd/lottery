@@ -50,6 +50,7 @@ func (c *AdminUserController) Get() mvc.Result {
 	}
 }
 // GET /admin/user/black?id=1&time=0
+//黑名单 或者 洗白
 func (c *AdminUserController) GetBlack() mvc.Result {
 	id, err := c.Ctx.URLParamInt("id")
 	t := c.Ctx.URLParamIntDefault("time", 0)
