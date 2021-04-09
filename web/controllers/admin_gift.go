@@ -30,15 +30,19 @@ func (c *AdminGiftController) Get() mvc.Result {
 	for i, giftInfo := range datalist {
 		// 奖品发放的计划数据
 		prizedata := make([][2]int, 0)
+		//反序列化，将结果写到prizedata里面
 		err := json.Unmarshal([]byte(giftInfo.PrizeData), &prizedata)
 		if err != nil || prizedata == nil || len(prizedata) < 1 {
+			//默认值
 			datalist[i].PrizeData = "[]"
 		} else {
 			newpd := make([]string, len(prizedata))
 			for index, pd := range prizedata {
 				ct := comm.FormatFromUnixTime(int64(pd[0]))
+				//奖品的时间和数量
 				newpd[index] = fmt.Sprintf("【%s】: %d", ct , pd[1])
 			}
+			//序列化
 			str, err := json.Marshal(newpd)
 			if err == nil && len(str) > 0 {
 				datalist[i].PrizeData = string(str)
@@ -66,6 +70,7 @@ func (c *AdminGiftController) Get() mvc.Result {
 	}
 }
 
+//修改奖品信息
 func (c *AdminGiftController) GetEdit() mvc.Result {
 	id := c.Ctx.URLParamIntDefault("id", 0)
 	//如果传了id进来，就可以获取到对应的giftInfo

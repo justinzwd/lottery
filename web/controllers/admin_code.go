@@ -36,6 +36,7 @@ func (c *AdminCodeController) Get() mvc.Result {
 		datalist = c.ServiceCode.Search(giftId)
 		num, cacheNum = utils.GetCacheCodeNum(giftId, c.ServiceCode)
 	} else {
+		//分页处理，传入页数和每页展示的条数
 		datalist = c.ServiceCode.GetAll(page, size)
 	}
 	total := (page - 1) + len(datalist)

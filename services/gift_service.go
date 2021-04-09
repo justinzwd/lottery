@@ -46,6 +46,7 @@ func (s *giftService) GetAll(useCache bool) []models.LtGift {
 	// 先读取缓存
 	gifts := s.getAllByCache()
 	if len(gifts) < 1 {
+		// 如果缓存中读不到结果
 		// 再读取数据库
 		gifts = s.dao.GetAll()
 		s.setAllByCache(gifts)
