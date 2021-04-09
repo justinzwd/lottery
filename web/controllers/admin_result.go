@@ -35,6 +35,7 @@ func (c *AdminResultController) Get() mvc.Result {
 		datalist = c.ServiceResult.GetAll(page, size)
 	}
 	total := (page - 1) + len(datalist)
+	//有时候total计算不准确
 	// 数据总数
 	if len(datalist) >= size {
 		if giftId > 0 {
@@ -69,6 +70,8 @@ func (c *AdminResultController) Get() mvc.Result {
 func (c *AdminResultController) GetDelete() mvc.Result {
 	id, err := c.Ctx.URLParamInt("id")
 	if err == nil {
+		//这里其实就是改状态
+		//并不是真正的删除
 		c.ServiceResult.Delete(id)
 	}
 	refer := c.Ctx.GetHeader("Referer")
@@ -83,6 +86,8 @@ func (c *AdminResultController) GetDelete() mvc.Result {
 func (c *AdminResultController) GetCheat() mvc.Result {
 	id, err := c.Ctx.URLParamInt("id")
 	if err == nil {
+		//SysStatus为2，即为作弊
+		//SysStatus为0，即恢复正常
 		c.ServiceResult.Update(&models.LtResult{Id:id, SysStatus:2}, []string{"sys_status"})
 	}
 	refer := c.Ctx.GetHeader("Referer")
@@ -97,6 +102,7 @@ func (c *AdminResultController) GetCheat() mvc.Result {
 func (c *AdminResultController) GetReset() mvc.Result {
 	id, err := c.Ctx.URLParamInt("id")
 	if err == nil {
+		//SysStatus为0，即恢复正常
 		c.ServiceResult.Update(&models.LtResult{Id:id, SysStatus:0}, []string{"sys_status"})
 	}
 	refer := c.Ctx.GetHeader("Referer")
