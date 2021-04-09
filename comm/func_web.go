@@ -34,12 +34,14 @@ func GetLoginUser(request *http.Request) *models.ObjLoginuser {
 	if err != nil {
 		return nil
 	}
+	//将uid从字符串转换为int类型
 	uid, err := strconv.Atoi(params.Get("uid"))
 	if err != nil || uid < 1 {
 		return nil
 	}
 	// Cookie最长使用时长
 	now, err := strconv.Atoi(params.Get("now"))
+	//超过30天，cookie失效
 	if err != nil || NowUnix()-now > 86400*30 {
 		return nil
 	}

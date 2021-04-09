@@ -6,5 +6,6 @@ type ObjLoginuser struct {
 	Username string
 	Now      int
 	Ip       string
+	//签名
 	Sign     string
 }
