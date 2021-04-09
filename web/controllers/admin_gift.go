@@ -52,11 +52,14 @@ func (c *AdminGiftController) Get() mvc.Result {
 	}
 	total := len(datalist)
 	return mvc.View{
+		//默认首页是gift这个模版
 		Name: "admin/gift.html",
 		Data: iris.Map{
 			"Title":    "管理后台",
 			"Channel":  "gift",
+			//奖品列表
 			"Datalist": datalist,
+			//奖品总数
 			"Total":    total,
 		},
 		Layout: "admin/layout.html",
@@ -65,6 +68,7 @@ func (c *AdminGiftController) Get() mvc.Result {
 
 func (c *AdminGiftController) GetEdit() mvc.Result {
 	id := c.Ctx.URLParamIntDefault("id", 0)
+	//如果传了id进来，就可以获取到对应的giftInfo
 	giftInfo := viewmodels.ViewGift{}
 	if id > 0 {
 		data := c.ServiceGift.Get(id, false)
@@ -93,6 +97,7 @@ func (c *AdminGiftController) GetEdit() mvc.Result {
 	}
 }
 
+//数据的更新保存
 func (c *AdminGiftController) PostSave() mvc.Result {
 	data := viewmodels.ViewGift{}
 	err := c.Ctx.ReadForm(&data)
@@ -157,6 +162,7 @@ func (c *AdminGiftController) PostSave() mvc.Result {
 		// 更新奖品的发奖计划
 		utils.ResetGiftPrizeData(&giftInfo, c.ServiceGift)
 	}
+	//如果更新保存成功，跳转到奖品管理页面
 	return mvc.Response{
 		Path: "/admin/gift",
 	}
